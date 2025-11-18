@@ -1,47 +1,67 @@
 @inject ToastService ToastService
 
-<div class="toast-container position-fixed top-0 end-0 p-3" style="z-index: 2000">
-    @if (visible)
+<div class="toast-container position-fixed top-0 end-0 p-3" style="z-index: 1055;">
+    @foreach (var toast in toasts)
     {
-        <div class="toast show align-items-center text-bg-@type border-0">
-            <div class="d-flex">
-                <div class="toast-body">
-                    <strong>@title:</strong> @message
+        <div class="toast show fade shadow-lg mb-3 animate__animated animate__fadeInDown"
+             style="min-width: 300px;"
+             @onclick="() => RemoveToast(toast)">
+
+            <div class="toast-header @HeaderClass(toast.Type)">
+                <strong class="me-auto">@toast.Title</strong>
+                <button type="button" class="btn-close" @onclick="() => RemoveToast(toast)"></button>
+            </div>
+
+            <div class="toast-body">
+                @toast.Message
+
+                <div class="progress mt-2" style="height: 4px;">
+                    <div class="progress-bar @ProgressClass(toast.Type)"
+                         role="progressbar"
+                         style="width: 100%; animation: shrink @((toast.Duration / 1000.0))s linear forwards;">
+                    </div>
                 </div>
-                <button class="btn-close btn-close-white me-2 m-auto" @onclick="Hide"></button>
             </div>
         </div>
     }
 </div>
 
 @code {
-    private bool visible = false;
-    private string type = "success";
-    private string title = "";
-    private string message = "";
+    private List<ToastMessage> toasts = new();
 
     protected override void OnInitialized()
     {
-        ToastService.OnShow += Show;
+        ToastService.OnShow += AddToast;
+        ToastService.OnHide += RemoveToast;
     }
 
-    private void Show(string type, string title, string message)
+    private void AddToast(ToastMessage toast)
     {
-        this.type = type;
-        this.title = title;
-        this.message = message;
-        visible = true;
-        StateHasChanged();
+        toasts.Add(toast);
+        InvokeAsync(StateHasChanged);
+    }
 
-        Task.Delay(3000).ContinueWith(_ =>
+    private void RemoveToast(ToastMessage toast)
+    {
+        toasts.Remove(toast);
+        InvokeAsync(StateHasChanged);
+    }
+
+    string HeaderClass(ToastType type) =>
+        type switch
         {
-            visible = false;
-            InvokeAsync(StateHasChanged);
-        });
-    }
+            ToastType.Success => "bg-success text-white",
+            ToastType.Error => "bg-danger text-white",
+            ToastType.Warning => "bg-warning text-dark",
+            _ => "bg-primary text-white"
+        };
 
-    private void Hide()
-    {
-        visible = false;
-    }
+    string ProgressClass(ToastType type) =>
+        type switch
+        {
+            ToastType.Success => "bg-success",
+            ToastType.Error => "bg-danger",
+            ToastType.Warning => "bg-warning",
+            _ => "bg-primary"
+        };
 }
