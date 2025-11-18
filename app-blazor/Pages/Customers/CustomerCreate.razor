@@ -1,0 +1,19 @@
+@page "/customers/create"
+@namespace app_blazor.Pages.Customers
+@using AIModelOrderingApp.Models.Entities
+@inject HttpClient Http
+@inject NavigationManager Nav
+
+<h3>Create Customer</h3>
+
+<CustomerForm Customer="customer" OnSubmit="Save" />
+
+@code {
+    private Customer customer = new Customer();
+
+    private async Task Save()
+    {
+        await Http.PostAsJsonAsync("/api/customers", customer);
+        Nav.NavigateTo("/customers");
+    }
+}
