@@ -200,3 +200,14 @@ dotnet run --project app-blazor/app-blazor.csproj
 
 
 ```
+
+Features also include:
+
+✔ Search
+✔ Pagination
+✔ Sorting
+✔ Validation
+✔ Responsive pages
+✔ Toast notifications
+✔ Clean Bootstrap UI
+
