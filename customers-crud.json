@@ -12,5 +12,10 @@
   "Phone": "123-456-9999",
   "CRUD-Operation": "Update"
 }
+,
+{
+  "Id": 1,
+  "CRUD-Operation": "Delete"
+}
 
 ]
