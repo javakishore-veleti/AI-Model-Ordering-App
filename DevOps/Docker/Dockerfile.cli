@@ -1,0 +1,23 @@
+# Dockerfile.cli
+FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS base
+WORKDIR /app
+
+FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
+WORKDIR /src
+
+COPY app-cli/*.csproj app-cli/
+COPY app-models/*.csproj app-models/
+COPY app-common/*.csproj app-common/
+COPY app-core/*.csproj app-core/
+COPY app-services/*.csproj app-services/
+COPY app-daos/*.csproj app-daos/
+
+RUN dotnet restore app-cli/app-cli.csproj
+
+COPY . .
+RUN dotnet publish app-cli/app-cli.csproj -c Release -o /app/publish
+
+FROM base AS final
+WORKDIR /app
+COPY --from=build /app/publish .
+ENTRYPOINT ["dotnet", "app-cli.dll"]
