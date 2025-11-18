@@ -203,19 +203,20 @@ dotnet run --project app-blazor/app-blazor.csproj
 
 Features also include:
 
-✔ Search
-✔ Pagination
-✔ Sorting
-✔ Validation
-✔ Responsive pages
-✔ Toast notifications
-✔ Clean Bootstrap UI
+- ✔ Search
+- ✔ Pagination
+- ✔ Sorting
+- ✔ Validation
+- ✔ Responsive pages
+- ✔ Toast notifications
+- ✔ Clean Bootstrap UI
 
-✔ Uses ToastService
-✔ Uses Model instead of Customer parameter
-✔ Uses OnSubmitSuccess instead of OnSubmit
-✔ Correct namespace & imports
-✔ Fully aligned with the improved validation + toasts system
+
+- ✔ Uses ToastService
+- ✔ Uses Model instead of Customer parameter
+- ✔ Uses OnSubmitSuccess instead of OnSubmit
+- ✔ Correct namespace & imports
+- ✔ Fully aligned with the improved validation + toasts system
 
 
 A multi-project .NET solution, plus:
