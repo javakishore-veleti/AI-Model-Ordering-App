@@ -1,31 +1,44 @@
-using Microsoft.AspNetCore.Components;
-using Microsoft.AspNetCore.Components.Web;
-using app_web.Data;
+using AIModelOrderingApp.Core.Services;
+using AIModelOrderingApp.Services;
+using AIModelOrderingApp.Core.Repositories;
+using AIModelOrderingApp.Daos.Repositories;
+using AIModelOrderingApp.Daos.Database;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.OpenApi.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
-builder.Services.AddRazorPages();
-builder.Services.AddServerSideBlazor();
-builder.Services.AddSingleton<WeatherForecastService>();
+string connectionString =
+    "Server=localhost;Database=AIModelOrdering;Uid=root;Pwd=yourpassword;";
+
+// EF Core
+builder.Services.AddDbContext<AppDbContext>(options =>
+    options.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString)));
+
+// Repository + Service
+builder.Services.AddScoped<ICustomerRepository, CustomerRepository>();
+builder.Services.AddScoped<ICustomerService, CustomerServiceImplV2>();
+
+// Swagger
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSwaggerGen(c =>
+{
+    c.SwaggerDoc("v1", new OpenApiInfo 
+    { 
+        Title = "AI Model Ordering API", 
+        Version = "v1" 
+    });
+});
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
-if (!app.Environment.IsDevelopment())
+// Enable Swagger
+app.UseSwagger();
+app.UseSwaggerUI(c =>
 {
-    app.UseExceptionHandler("/Error");
-    // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
-    app.UseHsts();
-}
+    c.SwaggerEndpoint("/swagger/v1/swagger.json", "AI Model Ordering API V1");
+});
 
-app.UseHttpsRedirection();
-
-app.UseStaticFiles();
-
-app.UseRouting();
-
-app.MapBlazorHub();
-app.MapFallbackToPage("/_Host");
+app.MapGet("/", () => "AI Model Ordering Web API is running!");
 
 app.Run();

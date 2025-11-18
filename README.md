@@ -104,6 +104,65 @@ GRANT ALL PRIVILEGES ON AIModelOrdering.* TO 'root'@'localhost';
 FLUSH PRIVILEGES;
 
 
+# If you want consistent predictable IDs each run
+mysql -u root
+
+USE AIModelOrdering;
+
+DELETE FROM Customers;
+ALTER TABLE Customers AUTO_INCREMENT = 1;
+
+
+# build in app-web
+dotnet add app-web/app-web.csproj reference app-core/app-core.csproj
+dotnet add app-web/app-web.csproj reference app-services/app-services.csproj
+dotnet add app-web/app-web.csproj reference app-daos/app-daos.csproj
+dotnet add app-web/app-web.csproj reference app-models/app-models.csproj
+
+# Remove EF Core 10, install EF Core 8
+dotnet remove app-daos/app-daos.csproj package Microsoft.EntityFrameworkCore
+dotnet remove app-daos/app-daos.csproj package Microsoft.EntityFrameworkCore.Relational
+dotnet remove app-daos/app-daos.csproj package Microsoft.EntityFrameworkCore.Abstractions
+dotnet remove app-daos/app-daos.csproj package Microsoft.EntityFrameworkCore.Design
+dotnet remove app-daos/app-daos.csproj package Pomelo.EntityFrameworkCore.MySql
+
+dotnet remove app-cli/app-cli.csproj package Microsoft.EntityFrameworkCore
+
+# Install EF Core 8 packages (CORRECT VERSION for .NET 8)
+dotnet add app-daos/app-daos.csproj package Microsoft.EntityFrameworkCore --version 8.0.2
+dotnet add app-daos/app-daos.csproj package Microsoft.EntityFrameworkCore.Relational --version 8.0.2
+dotnet add app-daos/app-daos.csproj package Microsoft.EntityFrameworkCore.Design --version 8.0.2
+dotnet add app-daos/app-daos.csproj package Pomelo.EntityFrameworkCore.MySql --version 8.0.0
+
+dotnet add app-cli/app-cli.csproj package Microsoft.EntityFrameworkCore --version 8.0.2
+dotnet add app-cli/app-cli.csproj package Pomelo.EntityFrameworkCore.MySql --version 8.0.0
+
+
+dotnet add app-web/app-web.csproj package Microsoft.EntityFrameworkCore --version 8.0.2
+dotnet add app-web/app-web.csproj package Pomelo.EntityFrameworkCore.MySql --version 8.0.0
+dotnet add app-web/app-web.csproj package Microsoft.EntityFrameworkCore.Design --version 8.0.2
+dotnet add app-web/app-web.csproj package Microsoft.Extensions.Configuration.Json
+dotnet add app-web/app-web.csproj package Microsoft.Extensions.Logging
+
+# Swagger
+dotnet add app-web/app-web.csproj package Swashbuckle.AspNetCore --version 6.5.0
+
+
+dotnet add app-daos/app-daos.csproj package Microsoft.EntityFrameworkCore --version 8.0.2
+dotnet add app-daos/app-daos.csproj package Microsoft.EntityFrameworkCore.Relational --version 8.0.2
+dotnet add app-daos/app-daos.csproj package Microsoft.EntityFrameworkCore.Design --version 8.0.2
+dotnet add app-daos/app-daos.csproj package Pomelo.EntityFrameworkCore.MySql --version 8.0.0
+
+
+dotnet add app-daos/app-daos.csproj reference app-models/app-models.csproj
+
+
+dotnet clean
+dotnet build
+
+dotnet --list-sdks
+dotnet --list-runtimes
+
 dotnet run --project app-cli/app-cli.csproj \
 --service-name customer \
 --input-file customers-crud.json
@@ -113,12 +172,5 @@ dotnet run --project app-cli/app-cli.csproj --no-launch-profile -- \
 --input-file customers-crud.json \
 --program ProgramV2
 
-# If you want consistent predictable IDs each run
-mysql -u root
-
-USE AIModelOrdering;
-
-DELETE FROM Customers;
-ALTER TABLE Customers AUTO_INCREMENT = 1;
 
 ```

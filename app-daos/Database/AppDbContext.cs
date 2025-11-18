@@ -1,5 +1,5 @@
-using AIModelOrderingApp.Models.Entities;
 using Microsoft.EntityFrameworkCore;
+using AIModelOrderingApp.Models.Entities;
 
 namespace AIModelOrderingApp.Daos.Database;
 

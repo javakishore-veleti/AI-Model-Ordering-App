@@ -17,18 +17,17 @@ public class ProgramV2
         var builder = Host.CreateDefaultBuilder(args)
             .ConfigureServices((context, services) =>
             {
-                // Your MySQL Connection String
                 string connectionString =
                     "Server=localhost;Database=AIModelOrdering;Uid=root;Pwd=yourpassword;";
 
-                // Register EF Core DbContext
+                // EF Core DbContext
                 services.AddDbContext<AppDbContext>(options =>
                     options.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString)));
 
-                // Register repository
+                // Repositories
                 services.AddScoped<ICustomerRepository, CustomerRepository>();
 
-                // Register EF Core service layer (V2)
+                // EF Core service layer
                 services.AddScoped<ICustomerService, CustomerServiceImplV2>();
             });
 
@@ -48,7 +47,7 @@ public class ProgramV2
     }
 
     // -----------------------------
-    // Utility Functions
+    // Helpers
     // -----------------------------
 
     private static string GetArg(string[] args, string name)
@@ -75,7 +74,7 @@ public class ProgramV2
 
         var json = await File.ReadAllTextAsync(file);
 
-        // Deserialize array of CRUD operations
+        // List of operations
         var dtoList = JsonSerializer.Deserialize<List<CustomerCrudDTO>>(json);
 
         if (dtoList == null || dtoList.Count == 0)
