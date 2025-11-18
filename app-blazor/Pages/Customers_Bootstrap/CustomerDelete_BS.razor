@@ -3,31 +3,28 @@
 @using AIModelOrderingApp.Models.Entities
 @inject HttpClient Http
 @inject NavigationManager Nav
+@inject ToastService ToastService
 
-<div class="container mt-4">
-    <h2 class="text-danger">Delete Customer (Bootstrap)</h2>
+<h3>Delete Customer</h3>
 
-    @if (customer == null)
-    {
-        <p>Loading...</p>
-    }
-    else
-    {
-        <div class="alert alert-danger shadow-sm">
-            <h5>Are you sure you want to delete this customer?</h5>
-            <p><strong>Name:</strong> @customer.Name</p>
-            <p><strong>Email:</strong> @customer.Email</p>
-            <p><strong>Phone:</strong> @customer.Phone</p>
+@if (customer == null)
+{
+    <p>Loading...</p>
+}
+else
+{
+    <div class="alert alert-danger">
+        Are you sure you want to delete <strong>@customer.Name</strong>?
+    </div>
 
-            <button class="btn btn-danger" @onclick="Delete">Yes, Delete</button>
-            <button class="btn btn-secondary ms-2" @onclick="Cancel">Cancel</button>
-        </div>
-    }
-</div>
+    <button class="btn btn-danger" @onclick="Delete">Yes, Delete</button>
+    <button class="btn btn-secondary ms-2" @onclick="Cancel">Cancel</button>
+}
 
 @code {
     [Parameter] public long Id { get; set; }
-    Customer? customer;
+
+    private Customer? customer;
 
     protected override async Task OnInitializedAsync()
     {
@@ -36,8 +33,17 @@
 
     private async Task Delete()
     {
-        await Http.DeleteAsync($"/api/customers/{Id}");
-        Nav.NavigateTo("/customers-bootstrap");
+        var result = await Http.DeleteAsync($"/api/customers/{Id}");
+
+        if (result.IsSuccessStatusCode)
+        {
+            ToastService.ShowSuccess("Customer deleted.");
+            Nav.NavigateTo("/customers-bootstrap");
+        }
+        else
+        {
+            ToastService.ShowError("Delete failed.");
+        }
     }
 
     private void Cancel() => Nav.NavigateTo("/customers-bootstrap");

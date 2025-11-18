@@ -211,3 +211,8 @@ Features also include:
 ✔ Toast notifications
 ✔ Clean Bootstrap UI
 
+✔ Uses ToastService
+✔ Uses Model instead of Customer parameter
+✔ Uses OnSubmitSuccess instead of OnSubmit
+✔ Correct namespace & imports
+✔ Fully aligned with the improved validation + toasts system

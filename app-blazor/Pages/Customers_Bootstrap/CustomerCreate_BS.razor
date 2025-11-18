@@ -3,18 +3,29 @@
 @using AIModelOrderingApp.Models.Entities
 @inject HttpClient Http
 @inject NavigationManager Nav
+@inject ToastService ToastService
 
 <div class="container mt-4">
-    <h2>Create Customer (Bootstrap)</h2>
-    <CustomerForm_BS Customer="customer" OnSubmit="Save" />
+    <h2 class="mb-3">Create Customer (Bootstrap)</h2>
+
+    <CustomerForm_BS Model="customer" OnSubmitSuccess="Save" />
 </div>
 
 @code {
-    private Customer customer = new Customer();
+    private Customer customer = new();
 
     private async Task Save()
     {
-        await Http.PostAsJsonAsync("/api/customers", customer);
-        Nav.NavigateTo("/customers-bootstrap");
+        var response = await Http.PostAsJsonAsync("/api/customers", customer);
+
+        if (response.IsSuccessStatusCode)
+        {
+            ToastService.ShowSuccess("Customer created successfully!");
+            Nav.NavigateTo("/customers-bootstrap");
+        }
+        else
+        {
+            ToastService.ShowError("Error while creating customer.");
+        }
     }
 }

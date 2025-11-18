@@ -1,33 +1,37 @@
-@namespace app_blazor.Pages.Customers_Bootstrap
+@using System.ComponentModel.DataAnnotations
 @using AIModelOrderingApp.Models.Entities
 
-<EditForm Model="Customer" OnValidSubmit="HandleValidSubmit">
+<EditForm Model="Model" OnValidSubmit="HandleSubmit">
     <DataAnnotationsValidator />
+    <ValidationSummary />
 
     <div class="mb-3">
         <label class="form-label">Name</label>
-        <InputText class="form-control" @bind-Value="Customer.Name" />
+        <InputText class="form-control" @bind-Value="Model.Name" />
+        <ValidationMessage For="@(() => Model.Name)" />
     </div>
 
     <div class="mb-3">
         <label class="form-label">Email</label>
-        <InputText class="form-control" @bind-Value="Customer.Email" />
+        <InputText class="form-control" @bind-Value="Model.Email" />
+        <ValidationMessage For="@(() => Model.Email)" />
     </div>
 
     <div class="mb-3">
         <label class="form-label">Phone</label>
-        <InputText class="form-control" @bind-Value="Customer.Phone" />
+        <InputText class="form-control" @bind-Value="Model.Phone" />
+        <ValidationMessage For="@(() => Model.Phone)" />
     </div>
 
     <button class="btn btn-success" type="submit">Save</button>
 </EditForm>
 
 @code {
-    [Parameter] public Customer Customer { get; set; } = new();
-    [Parameter] public EventCallback OnSubmit { get; set; }
+    [Parameter] public Customer Model { get; set; } = new();
+    [Parameter] public EventCallback OnSubmitSuccess { get; set; }
 
-    private async Task HandleValidSubmit()
+    private async Task HandleSubmit()
     {
-        await OnSubmit.InvokeAsync();
+        await OnSubmitSuccess.InvokeAsync();
     }
 }

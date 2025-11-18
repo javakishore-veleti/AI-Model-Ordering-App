@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
+using app_blazor.Shared;   // ← REQUIRED for ToastService
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -10,15 +11,18 @@ builder.Services.AddServerSideBlazor();
 // Register HttpClient for calling app-web API
 builder.Services.AddHttpClient("ApiClient", client =>
 {
-    client.BaseAddress = new Uri("http://localhost:5174"); // ← API base URL
+    client.BaseAddress = new Uri("http://localhost:5174"); // API base URL
 });
 
-// For injecting directly:
+// Inject HttpClient directly
 builder.Services.AddScoped(sp =>
 {
     var factory = sp.GetRequiredService<IHttpClientFactory>();
     return factory.CreateClient("ApiClient");
 });
+
+// Toasts
+builder.Services.AddScoped<ToastService>();
 
 var app = builder.Build();
 

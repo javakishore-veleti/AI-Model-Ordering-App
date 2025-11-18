@@ -3,23 +3,23 @@
 @using AIModelOrderingApp.Models.Entities
 @inject HttpClient Http
 @inject NavigationManager Nav
+@inject ToastService ToastService
 
-<div class="container mt-4">
-    <h2>Edit Customer (Bootstrap)</h2>
+<h3>Edit Customer (Bootstrap)</h3>
 
-    @if (customer == null)
-    {
-        <p>Loading...</p>
-    }
-    else
-    {
-        <CustomerForm_BS Customer="customer" OnSubmit="Save" />
-    }
-</div>
+@if (customer == null)
+{
+    <p>Loading...</p>
+}
+else
+{
+    <CustomerForm_BS Model="customer" OnSubmitSuccess="Save" />
+}
 
 @code {
     [Parameter] public long Id { get; set; }
-    Customer? customer;
+
+    private Customer? customer;
 
     protected override async Task OnInitializedAsync()
     {
@@ -28,7 +28,16 @@
 
     private async Task Save()
     {
-        await Http.PutAsJsonAsync($"/api/customers/{Id}", customer);
-        Nav.NavigateTo("/customers-bootstrap");
+        var response = await Http.PutAsJsonAsync($"/api/customers/{Id}", customer);
+
+        if (response.IsSuccessStatusCode)
+        {
+            ToastService.ShowSuccess("Customer updated!");
+            Nav.NavigateTo("/customers-bootstrap");
+        }
+        else
+        {
+            ToastService.ShowError("Update failed.");
+        }
     }
 }
