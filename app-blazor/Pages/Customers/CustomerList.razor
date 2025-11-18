@@ -1,0 +1,48 @@
+@page "/customers"
+@namespace app_blazor.Pages.Customers
+@using AIModelOrderingApp.Models.Entities
+
+@inject HttpClient Http
+
+<h3>Customers</h3>
+
+@if (customers == null)
+{
+    <p>Loading...</p>
+}
+else
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Email</th>
+                <th>Phone</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+        @foreach (var c in customers)
+        {
+            <tr>
+                <td>@c.Name</td>
+                <td>@c.Email</td>
+                <td>@c.Phone</td>
+                <td>
+                    <a href="/customers/edit/@c.Id">Edit</a> |
+                    <a href="/customers/delete/@c.Id">Delete</a>
+                </td>
+            </tr>
+        }
+        </tbody>
+    </table>
+}
+
+@code {
+    private List<Customer>? customers;
+
+    protected override async Task OnInitializedAsync()
+    {
+        customers = await Http.GetFromJsonAsync<List<Customer>>("/api/customers");
+    }
+}

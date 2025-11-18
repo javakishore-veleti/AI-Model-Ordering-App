@@ -153,9 +153,7 @@ dotnet add app-daos/app-daos.csproj package Microsoft.EntityFrameworkCore.Relati
 dotnet add app-daos/app-daos.csproj package Microsoft.EntityFrameworkCore.Design --version 8.0.2
 dotnet add app-daos/app-daos.csproj package Pomelo.EntityFrameworkCore.MySql --version 8.0.0
 
-
 dotnet add app-daos/app-daos.csproj reference app-models/app-models.csproj
-
 
 dotnet clean
 dotnet build
@@ -173,11 +171,32 @@ dotnet run --project app-cli/app-cli.csproj --no-launch-profile -- \
 --program ProgramV2
 
 dotnet clean
-
 dotnet build
 
 dotnet run --project app-web/app-web.csproj
 
 # Open http://localhost:5174/swagger/index.html
+
+
+# Blazor Implementation
+dotnet new blazorserver -n app-blazor
+
+dotnet add app-blazor/app-blazor.csproj reference app-models/app-models.csproj
+dotnet add app-blazor/app-blazor.csproj reference app-core/app-core.csproj
+
+# ❗ Do NOT reference app-daos or app-services
+# Blazor must call your API, not your EF Core or services directly.
+
+dotnet add app-blazor/app-blazor.csproj package Microsoft.AspNetCore.Components.Web
+dotnet add app-blazor/app-blazor.csproj package Microsoft.AspNetCore.Components.WebAssembly
+
+# For calling your API:
+dotnet add app-blazor/app-blazor.csproj package System.Net.Http.Json
+
+dotnet clean
+dotnet build
+
+dotnet run --project app-blazor/app-blazor.csproj
+
 
 ```

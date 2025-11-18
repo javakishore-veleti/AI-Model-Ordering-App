@@ -1,0 +1,34 @@
+@page "/customers/edit/{Id:long}"
+@namespace app_blazor.Pages.Customers
+@using app_blazor.Pages.Customers
+@using AIModelOrderingApp.Models.Entities
+
+@inject HttpClient Http
+@inject NavigationManager Nav
+
+<h3>Edit Customer</h3>
+
+@if (customer == null)
+{
+    <p>Loading...</p>
+}
+else
+{
+    <CustomerForm Customer="customer" OnSubmit="Save" />
+}
+
+@code {
+    [Parameter] public long Id { get; set; }
+    Customer? customer;
+
+    protected override async Task OnInitializedAsync()
+    {
+        customer = await Http.GetFromJsonAsync<Customer>($"/api/customers/{Id}");
+    }
+
+    private async Task Save()
+    {
+        await Http.PutAsJsonAsync($"/api/customers/{Id}", customer);
+        Nav.NavigateTo("/customers");
+    }
+}

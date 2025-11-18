@@ -1,0 +1,20 @@
+@namespace app_blazor.Pages.Customers
+@using AIModelOrderingApp.Models.Entities
+
+<div class="form-group">
+    <label>Name:</label>
+    <input class="form-control" @bind="Customer.Name" />
+
+    <label>Email:</label>
+    <input class="form-control" @bind="Customer.Email" />
+
+    <label>Phone:</label>
+    <input class="form-control" @bind="Customer.Phone" />
+
+    <button class="btn btn-primary mt-2" @onclick="OnSubmit">Save</button>
+</div>
+
+@code {
+    [Parameter] public Customer Customer { get; set; } = new();
+    [Parameter] public EventCallback OnSubmit { get; set; }
+}
