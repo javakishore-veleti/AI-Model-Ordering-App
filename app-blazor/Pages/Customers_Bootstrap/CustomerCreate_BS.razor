@@ -1,0 +1,20 @@
+@page "/customers-bootstrap/create"
+@namespace app_blazor.Pages.Customers_Bootstrap
+@using AIModelOrderingApp.Models.Entities
+@inject HttpClient Http
+@inject NavigationManager Nav
+
+<div class="container mt-4">
+    <h2>Create Customer (Bootstrap)</h2>
+    <CustomerForm_BS Customer="customer" OnSubmit="Save" />
+</div>
+
+@code {
+    private Customer customer = new Customer();
+
+    private async Task Save()
+    {
+        await Http.PostAsJsonAsync("/api/customers", customer);
+        Nav.NavigateTo("/customers-bootstrap");
+    }
+}

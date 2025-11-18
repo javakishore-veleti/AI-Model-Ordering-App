@@ -1,0 +1,62 @@
+@page "/customers-bootstrap"
+@namespace app_blazor.Pages.Customers_Bootstrap
+@using AIModelOrderingApp.Models.Entities
+@inject HttpClient Http
+
+<div class="container mt-4">
+    <h2 class="mb-3">Customers (Bootstrap)</h2>
+
+    <div class="d-flex justify-content-end mb-3">
+        <a class="btn btn-primary" href="/customers-bootstrap/create">
+            <i class="bi bi-plus-circle"></i> Create New Customer
+        </a>
+    </div>
+
+    @if (customers == null)
+    {
+        <div class="text-center">
+            <div class="spinner-border text-primary" role="status"></div>
+            <p>Loading customers...</p>
+        </div>
+    }
+    else if (!customers.Any())
+    {
+        <p class="text-muted">No customers found.</p>
+    }
+    else
+    {
+        <table class="table table-striped table-bordered shadow-sm">
+            <thead class="table-dark">
+                <tr>
+                    <th>Name</th>
+                    <th>Email</th>
+                    <th>Phone</th>
+                    <th style="width: 140px;">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+            @foreach (var c in customers)
+            {
+                <tr>
+                    <td>@c.Name</td>
+                    <td>@c.Email</td>
+                    <td>@c.Phone</td>
+                    <td>
+                        <a class="btn btn-sm btn-warning me-1" href="/customers-bootstrap/edit/@c.Id">Edit</a>
+                        <a class="btn btn-sm btn-danger" href="/customers-bootstrap/delete/@c.Id">Delete</a>
+                    </td>
+                </tr>
+            }
+            </tbody>
+        </table>
+    }
+</div>
+
+@code {
+    private List<Customer>? customers;
+
+    protected override async Task OnInitializedAsync()
+    {
+        customers = await Http.GetFromJsonAsync<List<Customer>>("/api/customers");
+    }
+}
