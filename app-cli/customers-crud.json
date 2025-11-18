@@ -1,0 +1,20 @@
+[
+{
+  "Name": "John Doe",
+  "Email": "john@example.com",
+  "Phone": "123-456-7890",
+  "CRUD-Operation": "Create"
+},
+{
+  "Id": 1,
+  "Name": "John Doe Updated",
+  "Email": "john@example.com",
+  "Phone": "123-456-9999",
+  "CRUD-Operation": "Update"
+},
+{
+  "Id": 1,
+  "CRUD-Operation": "Delete"
+}
+
+]

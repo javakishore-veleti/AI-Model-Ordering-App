@@ -51,6 +51,18 @@ dotnet add app-web/app-web.csproj reference app-models/app-models.csproj
 dotnet add app-web/app-web.csproj reference app-common/app-common.csproj
 dotnet add app-web/app-web.csproj reference app-core/app-core.csproj
 
+# DB Related in app-services
+dotnet add app-services/app-services.csproj package Dapper
+dotnet add app-services/app-services.csproj package MySql.Data
+
+dotnet add app-cli/app-cli.csproj package Microsoft.Extensions.Hosting
+dotnet add app-cli/app-cli.csproj package Microsoft.Extensions.DependencyInjection
+
+
 # Verify Everything
 dotnet build
+
+brew install mysql
+brew services start mysql
+
 ```
