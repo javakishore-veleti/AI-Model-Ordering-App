@@ -155,27 +155,7 @@ dotnet add app-daos/app-daos.csproj package Pomelo.EntityFrameworkCore.MySql --v
 
 dotnet add app-daos/app-daos.csproj reference app-models/app-models.csproj
 
-dotnet clean
-dotnet build
 
-dotnet --list-sdks
-dotnet --list-runtimes
-
-dotnet run --project app-cli/app-cli.csproj \
---service-name customer \
---input-file customers-crud.json
-
-dotnet run --project app-cli/app-cli.csproj --no-launch-profile -- \
---service-name customer \
---input-file customers-crud.json \
---program ProgramV2
-
-dotnet clean
-dotnet build
-
-dotnet run --project app-web/app-web.csproj
-
-# Open http://localhost:5174/swagger/index.html
 
 
 # Blazor Implementation
@@ -198,6 +178,76 @@ dotnet build
 
 dotnet run --project app-blazor/app-blazor.csproj
 
+# Add Serilog Packages to ALL Projects
+
+dotnet add app-cli/app-cli.csproj package Serilog
+dotnet add app-cli/app-cli.csproj package Serilog.Sinks.File
+dotnet add app-cli/app-cli.csproj package Serilog.Sinks.Console
+
+dotnet add app-web/app-web.csproj package Serilog.AspNetCore
+dotnet add app-web/app-web.csproj package Serilog.Sinks.File
+dotnet add app-web/app-web.csproj package Serilog.Sinks.Console
+
+dotnet add app-blazor/app-blazor.csproj package Serilog.AspNetCore
+dotnet add app-blazor/app-blazor.csproj package Serilog.Sinks.File
+dotnet add app-blazor/app-blazor.csproj package Serilog.Sinks.Console
+
+dotnet add app-cli/app-cli.csproj package Serilog.Extensions.Hosting
+dotnet add app-cli/app-cli.csproj package Serilog.AspNetCore
+
+dotnet add app-cli/app-cli.csproj package Serilog.Sinks.File
+dotnet add app-cli/app-cli.csproj package Serilog.Sinks.Console
+
+
+dotnet add app-services/app-services.csproj package Serilog
+dotnet add app-services/app-services.csproj package Serilog.Sinks.File
+dotnet add app-services/app-services.csproj package Serilog.Sinks.Console
+dotnet add app-services/app-services.csproj package Serilog.Extensions.Hosting
+dotnet add app-services/app-services.csproj package Serilog.AspNetCore
+
+
+dotnet add app-common/app-common.csproj package Serilog
+dotnet add app-common/app-common.csproj package Serilog.Sinks.File
+dotnet add app-common/app-common.csproj package Serilog.Sinks.Console
+dotnet add app-common/app-common.csproj package Serilog.Extensions.Hosting
+dotnet add app-common/app-common.csproj package Serilog.AspNetCore
+
+
+dotnet add app-core/app-core.csproj package Serilog
+dotnet add app-core/app-core.csproj package Serilog.Sinks.File
+dotnet add app-core/app-core.csproj package Serilog.Sinks.Console
+dotnet add app-core/app-core.csproj package Serilog.Extensions.Hosting
+dotnet add app-core/app-core.csproj package Serilog.AspNetCore
+
+
+dotnet add app-daos/app-daos.csproj package Serilog
+dotnet add app-daos/app-daos.csproj package Serilog.Sinks.File
+dotnet add app-daos/app-daos.csproj package Serilog.Sinks.Console
+dotnet add app-daos/app-daos.csproj package Serilog.Extensions.Hosting
+dotnet add app-daos/app-daos.csproj package Serilog.AspNetCore
+
+
+dotnet clean
+dotnet build
+
+dotnet --list-sdks
+dotnet --list-runtimes
+
+dotnet run --project app-cli/app-cli.csproj \
+--service-name customer \
+--input-file customers-crud.json
+
+dotnet run --project app-cli/app-cli.csproj --no-launch-profile -- \
+--service-name customer \
+--input-file customers-crud.json \
+--program ProgramV2
+
+dotnet clean
+dotnet build
+
+dotnet run --project app-web/app-web.csproj
+
+# Open http://localhost:5174/swagger/index.html
 
 ```
 

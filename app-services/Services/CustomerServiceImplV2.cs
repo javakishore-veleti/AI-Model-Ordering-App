@@ -1,6 +1,7 @@
 using AIModelOrderingApp.Core.Services;
 using AIModelOrderingApp.Core.Repositories;
 using AIModelOrderingApp.Models.Entities;
+using Serilog;
 
 namespace AIModelOrderingApp.Services;
 
@@ -13,18 +14,98 @@ public class CustomerServiceImplV2 : ICustomerService
         _repo = repo;
     }
 
-    public Task<Customer> CreateCustomerAsync(Customer customer)
-        => _repo.AddAsync(customer);
+    public async Task<Customer> CreateCustomerAsync(Customer customer)
+    {
+        Log.Information("Creating customer: {@Customer}", customer);
 
-    public Task<Customer?> GetCustomerByIdAsync(long id)
-        => _repo.GetByIdAsync(id);
+        try
+        {
+            var created = await _repo.AddAsync(customer);
+            Log.Information("Customer created with ID {Id}", created.Id);
+            return created;
+        }
+        catch (Exception ex)
+        {
+            Log.Error(ex, "Failed to create customer: {@Customer}", customer);
+            throw;
+        }
+    }
 
-    public Task<IEnumerable<Customer>> GetAllCustomersAsync()
-        => _repo.GetAllAsync();
+    public async Task<Customer?> GetCustomerByIdAsync(long id)
+    {
+        Log.Information("Fetching customer with ID {Id}", id);
 
-    public Task<Customer> UpdateCustomerAsync(Customer customer)
-        => _repo.UpdateAsync(customer);
+        try
+        {
+            var customer = await _repo.GetByIdAsync(id);
 
-    public Task<bool> DeleteCustomerAsync(long id)
-        => _repo.DeleteAsync(id);
+            if (customer == null)
+                Log.Warning("Customer with ID {Id} not found", id);
+            else
+                Log.Information("Customer retrieved: {@Customer}", customer);
+
+            return customer;
+        }
+        catch (Exception ex)
+        {
+            Log.Error(ex, "Failed to fetch customer with ID {Id}", id);
+            throw;
+        }
+    }
+
+    public async Task<IEnumerable<Customer>> GetAllCustomersAsync()
+    {
+        Log.Information("Fetching all customers");
+
+        try
+        {
+            var list = await _repo.GetAllAsync();
+            Log.Information("Retrieved {Count} customers", list.Count());
+            return list;
+        }
+        catch (Exception ex)
+        {
+            Log.Error(ex, "Failed to fetch customer list");
+            throw;
+        }
+    }
+
+    public async Task<Customer> UpdateCustomerAsync(Customer customer)
+    {
+        Log.Information("Updating customer: {@Customer}", customer);
+
+        try
+        {
+            var updated = await _repo.UpdateAsync(customer);
+            Log.Information("Customer updated: {@Updated}", updated);
+            return updated;
+        }
+        catch (Exception ex)
+        {
+            Log.Error(ex, "Failed to update customer: {@Customer}", customer);
+            throw;
+        }
+    }
+
+    public async Task<bool> DeleteCustomerAsync(long id)
+    {
+        Log.Information("Deleting customer with ID {Id}", id);
+
+        try
+        {
+            var result = await _repo.DeleteAsync(id);
+
+            if (result)
+                Log.Information("Customer with ID {Id} successfully deleted", id);
+            else
+                Log.Warning("Customer with ID {Id} delete FAILED (not found?)", id);
+
+            return result;
+        }
+        catch (Exception ex)
+        {
+            Log.Error(ex, "Failed to delete customer with ID {Id}", id);
+            throw;
+        }
+    }
 }
