@@ -17,6 +17,11 @@ dotnet sln add app-models/app-models.csproj
 dotnet new classlib -n app-common
 dotnet sln add app-common/app-common.csproj
 
+dotnet new classlib -n app-core
+dotnet sln add app-core/app-core.csproj
+dotnet add app-core/app-core.csproj reference app-models/app-models.csproj
+
+
 # Create SERVICES layer
 dotnet new classlib -n app-services
 dotnet sln add app-services/app-services.csproj
