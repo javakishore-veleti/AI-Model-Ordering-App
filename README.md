@@ -65,10 +65,6 @@ dotnet build
 brew install mysql
 brew services start mysql
 
-dotnet run --project app-cli/app-cli.csproj \
---service-name customer \
---input-file customers-crud.json
-
 mysql -u root 
 
 CREATE DATABASE AIModelOrdering;
@@ -90,6 +86,12 @@ DESCRIBE Customers;
 
 GRANT ALL PRIVILEGES ON AIModelOrdering.* TO 'root'@'localhost';
 FLUSH PRIVILEGES;
+
+
+dotnet run --project app-cli/app-cli.csproj \
+--service-name customer \
+--input-file customers-crud.json
+
 
 
 ```
