@@ -1,0 +1,20 @@
+name: Build Blazor
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build-blazor:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 8.0.x
+
+      - name: Restore
+        run: dotnet restore app-blazor/app-blazor.csproj
+
+      - name: Build
+        run: dotnet build app-blazor/app-blazor.csproj -c Release --no-restore

@@ -1,0 +1,22 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ai-blazor
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: ai-blazor
+  template:
+    metadata:
+      labels:
+        app: ai-blazor
+    spec:
+      containers:
+      - name: ai-blazor
+        image: ai-model-ordering-blazor:latest
+        env:
+        - name: ApiBaseUrl
+          value: "http://ai-api:5174"
+        ports:
+        - containerPort: 5099

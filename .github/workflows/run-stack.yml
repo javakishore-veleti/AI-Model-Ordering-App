@@ -1,0 +1,17 @@
+name: Run Full Stack (API + Blazor + MySQL)
+
+on:
+  workflow_dispatch:
+
+jobs:
+  run-stack:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Docker Compose Up
+        run: |
+          docker compose -f DevOps/Docker/docker-compose.yml up -d
+
+      - name: Show Running Services
+        run: docker ps

@@ -1,0 +1,23 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: ai-ingress
+spec:
+  rules:
+  - host: ai.local
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: ai-blazor
+            port:
+              number: 5099
+      - path: /api
+        pathType: Prefix
+        backend:
+          service:
+            name: ai-api
+            port:
+              number: 5174

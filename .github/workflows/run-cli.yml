@@ -1,0 +1,20 @@
+name: Run CLI App with MySQL
+
+on:
+  workflow_dispatch:
+
+jobs:
+  run-cli:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Start MySQL
+        run: docker compose -f DevOps/Docker/docker-compose.yml up -d mysql
+
+      - name: Build CLI Docker Image
+        run: docker build -f DevOps/Docker/Dockerfile.cli -t ai-cli:latest .
+
+      - name: Run CLI Container
+        run: docker run --rm --network=host ai-cli:latest

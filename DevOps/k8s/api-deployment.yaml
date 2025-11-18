@@ -1,0 +1,22 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ai-api
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: ai-api
+  template:
+    metadata:
+      labels:
+        app: ai-api
+    spec:
+      containers:
+      - name: ai-api
+        image: ai-model-ordering-api:latest
+        env:
+        - name: ConnectionStrings__DefaultConnection
+          value: "Server=mysql;Database=AIModelOrdering;Uid=root;Pwd=root123;"
+        ports:
+        - containerPort: 5174

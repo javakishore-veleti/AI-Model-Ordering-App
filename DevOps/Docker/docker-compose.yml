@@ -1,0 +1,41 @@
+version: "3.9"
+
+services:
+  mysql:
+    image: mysql:8.0
+    container_name: ai-mysql
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: root123
+      MYSQL_DATABASE: AIModelOrdering
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+
+  api:
+    build:
+      context: ..
+      dockerfile: DevOps/Docker/Dockerfile.api
+    container_name: ai-api
+    environment:
+      ConnectionStrings__DefaultConnection: "Server=mysql;Database=AIModelOrdering;Uid=root;Pwd=root123;"
+    ports:
+      - "5174:5174"
+    depends_on:
+      - mysql
+
+  blazor:
+    build:
+      context: ..
+      dockerfile: DevOps/Docker/Dockerfile.blazor
+    container_name: ai-blazor
+    environment:
+      ApiBaseUrl: "http://api:5174"
+    ports:
+      - "5099:5099"
+    depends_on:
+      - api
+
+volumes:
+  mysql_data:
