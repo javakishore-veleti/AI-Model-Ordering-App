@@ -47,5 +47,5 @@ dotnet add app-web/app-web.csproj reference app-common/app-common.csproj
 dotnet add app-web/app-web.csproj reference app-core/app-core.csproj
 
 # Verify Everything
-
+dotnet build
 ```
