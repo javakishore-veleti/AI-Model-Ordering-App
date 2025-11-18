@@ -5,6 +5,7 @@
     <ProjectReference Include="..\app-models\app-models.csproj" />
     <ProjectReference Include="..\app-common\app-common.csproj" />
     <ProjectReference Include="..\app-core\app-core.csproj" />
+    <ProjectReference Include="..\app-daos\app-daos.csproj" />
   </ItemGroup>
 
   <ItemGroup>

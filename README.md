@@ -58,8 +58,22 @@ dotnet add app-services/app-services.csproj package MySql.Data
 dotnet add app-cli/app-cli.csproj package Microsoft.Extensions.Hosting
 dotnet add app-cli/app-cli.csproj package Microsoft.Extensions.DependencyInjection
 
+dotnet new classlib -n app-daos
+
+# Add project references:
+dotnet add app-daos/app-daos.csproj reference app-models/app-models.csproj
+dotnet add app-daos/app-daos.csproj reference app-core/app-core.csproj
+
+# Install EF Core packages:
+dotnet add app-daos/app-daos.csproj package Microsoft.EntityFrameworkCore
+dotnet add app-daos/app-daos.csproj package Pomelo.EntityFrameworkCore.MySql
+dotnet add app-daos/app-daos.csproj package Microsoft.Extensions.Configuration.Json
+
+dotnet add app-cli/app-cli.csproj reference app-daos/app-daos.csproj
+
 
 # Verify Everything
+dotnet clean
 dotnet build
 
 brew install mysql
@@ -70,6 +84,8 @@ mysql -u root
 CREATE DATABASE AIModelOrdering;
 
 SHOW DATABASES;
+
+USE AIModelOrdering;
 
 CREATE TABLE Customers (
     Id BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
@@ -92,6 +108,17 @@ dotnet run --project app-cli/app-cli.csproj \
 --service-name customer \
 --input-file customers-crud.json
 
+dotnet run --project app-cli/app-cli.csproj --no-launch-profile -- \
+--service-name customer \
+--input-file customers-crud.json \
+--program ProgramV2
 
+# If you want consistent predictable IDs each run
+mysql -u root
+
+USE AIModelOrdering;
+
+DELETE FROM Customers;
+ALTER TABLE Customers AUTO_INCREMENT = 1;
 
 ```
