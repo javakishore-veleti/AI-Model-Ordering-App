@@ -172,5 +172,12 @@ dotnet run --project app-cli/app-cli.csproj --no-launch-profile -- \
 --input-file customers-crud.json \
 --program ProgramV2
 
+dotnet clean
+
+dotnet build
+
+dotnet run --project app-web/app-web.csproj
+
+# Open http://localhost:5174/swagger/index.html
 
 ```
