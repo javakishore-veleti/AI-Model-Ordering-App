@@ -1,0 +1,49 @@
+name: Build ALL Components
+
+on:
+  workflow_dispatch:
+
+jobs:
+  trigger-builds:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Trigger Build API
+        uses: benc-uk/workflow-dispatch@v1
+        with:
+          workflow: build-api.yml
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Trigger Build Blazor
+        uses: benc-uk/workflow-dispatch@v1
+        with:
+          workflow: build-blazor.yml
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Trigger Build CLI
+        uses: benc-uk/workflow-dispatch@v1
+        with:
+          workflow: build-cli.yml
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Trigger Docker Build API
+        uses: benc-uk/workflow-dispatch@v1
+        with:
+          workflow: docker-api.yml
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Trigger Docker Build Blazor
+        uses: benc-uk/workflow-dispatch@v1
+        with:
+          workflow: docker-blazor.yml
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Trigger Docker Build CLI
+        uses: benc-uk/workflow-dispatch@v1
+        with:
+          workflow: docker-cli.yml
+          token: ${{ secrets.GITHUB_TOKEN }}
+
