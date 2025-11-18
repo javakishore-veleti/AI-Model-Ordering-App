@@ -35,9 +35,15 @@
         <table class="table table-striped table-bordered shadow-sm">
             <thead class="table-dark">
                 <tr>
-                    <th>Name</th>
-                    <th>Email</th>
-                    <th>Phone</th>
+                    <th @onclick=@(() => SortBy("Name")) style="cursor:pointer">
+                        Name @SortIcon("Name")
+                    </th>
+                    <th @onclick=@(() => SortBy("Email")) style="cursor:pointer">
+                        Email @SortIcon("Email")
+                    </th>
+                    <th @onclick=@(() => SortBy("Phone")) style="cursor:pointer">
+                        Phone @SortIcon("Phone")
+                    </th>
                     <th style="width: 140px;">Actions</th>
                 </tr>
             </thead>
@@ -68,9 +74,10 @@
 
                 @for (int i = 1; i <= TotalPages; i++)
                 {
-                    var pageNumber = i;   // IMPORTANT FIX
+                    var pageNumber = i;   // IMPORTANT fix for Blazor lambda binding
+
                     <li class="page-item @(currentPage == pageNumber ? "active" : "")">
-                        <button class="page-link" @onclick="() => SetPage(pageNumber)">
+                        <button class="page-link" @onclick=@(() => SetPage(pageNumber))>
                             @pageNumber
                         </button>
                     </li>
@@ -81,7 +88,6 @@
                 </li>
             </ul>
         </nav>
-
     }
 
 </div>
@@ -96,12 +102,18 @@
     {
         customers = await Http.GetFromJsonAsync<List<Customer>>("/api/customers");
         filteredCustomers = customers;
+
+        ApplySort();   // Initial sort
     }
 
+    // --------------------------
+    // SEARCH
+    // --------------------------
     private void ClearSearch()
     {
         searchText = "";
         filteredCustomers = customers;
+        ApplySort();
         SetPage(1);
     }
 
@@ -122,9 +134,62 @@
                 .ToList();
         }
 
-        SetPage(1); // Reset to first page after searching
+        ApplySort();
+        SetPage(1);
     }
 
+    // --------------------------
+    // SORTING
+    // --------------------------
+    private string sortColumn = "Name";
+    private bool sortAscending = true;
+
+    private void SortBy(string column)
+    {
+        if (sortColumn == column)
+            sortAscending = !sortAscending; // toggle sort direction
+        else
+        {
+            sortColumn = column;
+            sortAscending = true;
+        }
+
+        ApplySort();
+        SetPage(1);
+    }
+
+    private void ApplySort()
+    {
+        if (filteredCustomers == null) return;
+
+        filteredCustomers = sortColumn switch
+        {
+            "Email" => (sortAscending
+                ? filteredCustomers.OrderBy(c => c.Email)
+                : filteredCustomers.OrderByDescending(c => c.Email)).ToList(),
+
+            "Phone" => (sortAscending
+                ? filteredCustomers.OrderBy(c => c.Phone)
+                : filteredCustomers.OrderByDescending(c => c.Phone)).ToList(),
+
+            _ => (sortAscending
+                ? filteredCustomers.OrderBy(c => c.Name)
+                : filteredCustomers.OrderByDescending(c => c.Name)).ToList(),
+        };
+    }
+
+    private MarkupString SortIcon(string column)
+    {
+        if (sortColumn != column)
+            return (MarkupString)"";
+
+        string icon = sortAscending ? "▲" : "▼";
+        return (MarkupString)$"<span class='ms-1'>{icon}</span>";
+    }
+
+    // --------------------------
+    // PAGINATION
+    // --------------------------
     private int pageSize = 5;
     private int currentPage = 1;
 
@@ -139,7 +204,7 @@
     private void SetPage(int page)
     {
         currentPage = page;
-        StateHasChanged();  // Force UI refresh
+        StateHasChanged();
     }
 
     private void NextPage()
