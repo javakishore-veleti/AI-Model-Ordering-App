@@ -1,0 +1,46 @@
+@page "/customers/delete/{Id:long}"
+@namespace app_blazor.Pages.Customers
+@using AIModelOrderingApp.Models.Entities
+@inject HttpClient Http
+@inject NavigationManager Nav
+
+<h3>Delete Customer</h3>
+
+@if (customer == null)
+{
+    <p>Loading...</p>
+}
+else
+{
+    <div class="alert alert-danger">
+        <strong>Are you sure you want to delete this customer?</strong>
+        <p>Name: @customer.Name</p>
+        <p>Email: @customer.Email</p>
+        <p>Phone: @customer.Phone</p>
+    </div>
+
+    <button class="btn btn-danger" @onclick="Delete">Yes, Delete</button>
+    <button class="btn btn-secondary ms-2" @onclick="Cancel">Cancel</button>
+}
+
+@code {
+    [Parameter] public long Id { get; set; }
+
+    private Customer? customer;
+
+    protected override async Task OnInitializedAsync()
+    {
+        customer = await Http.GetFromJsonAsync<Customer>($"/api/customers/{Id}");
+    }
+
+    private async Task Delete()
+    {
+        await Http.DeleteAsync($"/api/customers/{Id}");
+        Nav.NavigateTo("/customers");
+    }
+
+    private void Cancel()
+    {
+        Nav.NavigateTo("/customers");
+    }
+}
