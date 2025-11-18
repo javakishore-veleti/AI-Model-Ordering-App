@@ -1,0 +1,77 @@
+name: Build ALL Components (Sequential)
+
+on:
+  workflow_dispatch:
+
+jobs:
+
+  step1-build-api:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Trigger Build API
+        uses: benc-uk/workflow-dispatch@v1
+        with:
+          workflow: build-api.yml
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+  step2-build-blazor:
+    runs-on: ubuntu-latest
+    needs: step1-build-api
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Trigger Build Blazor
+        uses: benc-uk/workflow-dispatch@v1
+        with:
+          workflow: build-blazor.yml
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+  step3-build-cli:
+    runs-on: ubuntu-latest
+    needs: step2-build-blazor
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Trigger Build CLI
+        uses: benc-uk/workflow-dispatch@v1
+        with:
+          workflow: build-cli.yml
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+  step4-docker-api:
+    runs-on: ubuntu-latest
+    needs: step3-build-cli
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Trigger Docker Build API
+        uses: benc-uk/workflow-dispatch@v1
+        with:
+          workflow: docker-api.yml
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+  step5-docker-blazor:
+    runs-on: ubuntu-latest
+    needs: step4-docker-api
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Trigger Docker Build Blazor
+        uses: benc-uk/workflow-dispatch@v1
+        with:
+          workflow: docker-blazor.yml
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+  step6-docker-cli:
+    runs-on: ubuntu-latest
+    needs: step5-docker-blazor
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Trigger Docker Build CLI
+        uses: benc-uk/workflow-dispatch@v1
+        with:
+          workflow: docker-cli.yml
+          token: ${{ secrets.GITHUB_TOKEN }}
