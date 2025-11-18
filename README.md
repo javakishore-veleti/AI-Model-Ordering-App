@@ -216,3 +216,15 @@ Features also include:
 ✔ Uses OnSubmitSuccess instead of OnSubmit
 ✔ Correct namespace & imports
 ✔ Fully aligned with the improved validation + toasts system
+
+
+A multi-project .NET solution, plus:
+
+- CLI app ✔
+- Web API ✔
+- Blazor Server UI ✔
+- PostgreSQL/MySQL/DB integration ✔
+- Docker builds for all ✔
+- Multi-workflow GitHub Actions ✔
+- Master orchestrator workflow ✔
+
