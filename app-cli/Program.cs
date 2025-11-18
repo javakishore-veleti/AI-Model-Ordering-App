@@ -10,8 +10,9 @@ var builder = Host.CreateDefaultBuilder(args)
     .ConfigureServices((context, services) =>
     {
         // TODO: move connection string into config later
+
         string connectionString =
-            "Server=localhost;Database=AIModelOrdering;Uid=root;Pwd=yourpassword;";
+            "Server=localhost;Database=AIModelOrdering;Uid=root;";
 
         services.AddScoped<ICustomerService>(
             _ => new CustomerServiceImpl(connectionString)
